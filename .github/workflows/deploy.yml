@@ -49,7 +49,8 @@ jobs:
           npm install --production
           npm run build
           # Restart frontend via PM2. Adjust the command as needed.
-          pm2 restart frontend || pm2 start npm --name "frontend" -- run start --prefix "$(pwd)"
+          pm2 start npm --name "frontend" -- run start --prefix /var/www/justrooms-website/frontend
+
           
           # --- BACKEND DEPLOYMENT ---
           cd ../backend
