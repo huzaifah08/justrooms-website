@@ -19,5 +19,8 @@ RUN npm run build
 # Expose the port the app runs on (adjust if your Next.js app uses a different port)
 EXPOSE 3000
 
+# Override any default ENTRYPOINT from the base image
+ENTRYPOINT []
+
 # Use the production start command
 CMD ["npm", "start"]
