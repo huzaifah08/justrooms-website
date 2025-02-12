@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nextjs_frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - appnet
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastify_backend
+    ports:
+      - "8080:8080"
+    networks:
+      - appnet
+
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx_proxy_manager
+    restart: always
+    ports:
+      - "80:80"    # For HTTP
+      - "81:81"    # For the NPM admin UI
+      - "443:443"  # For HTTPS
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
