@@ -15,6 +15,9 @@ COPY . .
 # Expose port 8080 (assuming your Fastify app listens on port 8080)
 EXPOSE 8080
 
+# Override any default ENTRYPOINT from the base image
+ENTRYPOINT []
+
 # Start the Fastify app (ensure your package.json "start" script does this)
 CMD ["npm", "start"]
 
