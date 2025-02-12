@@ -9,7 +9,7 @@ services:
     networks:
       - appnet
     # Override default entrypoint
-    entrypoint: []
+    
 
   backend:
     image: ghcr.io/justrooms/justrooms-backend:latest
@@ -19,7 +19,7 @@ services:
     networks:
       - appnet
     # Override default entrypoint
-    entrypoint: []
+    
 
   nginx-proxy-manager:
     image: 'jc21/nginx-proxy-manager:latest'
