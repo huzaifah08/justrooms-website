@@ -2,9 +2,7 @@ version: '3'
 
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:latest
     container_name: nextjs_frontend
     ports:
       - "3000:3000"
@@ -12,9 +10,7 @@ services:
       - appnet
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:latest
     container_name: fastify_backend
     ports:
       - "8080:8080"
@@ -30,7 +26,7 @@ services:
       - "81:81"    # For the NPM admin UI
       - "443:443"  # For HTTPS
     volumes:
-      - /home/ubunutu/data:/data
+      - /home/ubuntu/data:/data
       - /home/ubuntu/letsencrypt:/etc/letsencrypt
     networks:
       - appnet
