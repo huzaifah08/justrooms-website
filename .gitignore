@@ -1,0 +1,5 @@
+# Ignore SSL certificate and letsencrypt data
+letsencrypt/
+
+# Ignore log files
+data/logs/

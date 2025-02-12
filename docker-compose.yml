@@ -30,8 +30,8 @@ services:
       - "81:81"    # For the NPM admin UI
       - "443:443"  # For HTTPS
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - /home/ubunutu/data:/data
+      - /home/ubuntu/letsencrypt:/etc/letsencrypt
     networks:
       - appnet
 

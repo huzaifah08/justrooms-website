@@ -1,5 +1,0 @@
-2025/02/12 18:19:30 [error] 247#247: *3510 nextjs-frontend could not be resolved (2: Server failure), client: 104.164.173.175, server: justroom.co.uk, request: "GET / HTTP/1.1", host: "justroom.co.uk"
-2025/02/12 18:19:30 [error] 248#248: *3511 nextjs-frontend could not be resolved (2: Server failure), client: 104.164.173.228, server: justroom.co.uk, request: "GET / HTTP/1.1", host: "justroom.co.uk"
-2025/02/12 18:19:38 [error] 249#249: *3514 nextjs-frontend could not be resolved (2: Server failure), client: 154.28.229.30, server: justroom.co.uk, request: "GET / HTTP/1.1", host: "justroom.co.uk"
-2025/02/12 18:42:59 [warn] 274#274: *3688 using uninitialized "server" variable while logging request, client: 193.56.113.12, server: justroom.co.uk
-2025/02/12 18:42:59 [warn] 273#273: *3687 using uninitialized "server" variable while logging request, client: 193.56.113.12, server: justroom.co.uk
