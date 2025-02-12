@@ -1,38 +1,47 @@
-name: Deploy to Production
+name: Build and Push Docker Images to GHCR
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the code from GitHub.
+      # 1. Check out the repository code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. (Optional) Install Docker Compose (if not already available on the runner)
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+      # 2. Set up Docker Buildx (optional but recommended for caching and multi-platform builds)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-      # 3. (Optional) Pull the latest code and update configuration on the server.
-      - name: Deploy to Oracle Cloud Server
-        uses: appleboy/ssh-action@v0.1.8
+      # 3. Log in to GitHub Container Registry (GHCR)
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          port: ${{ secrets.SERVER_PORT }}
-          script: |
-            cd /var/www/justrooms-website
-            git pull origin main
-            # Stop and remove the current containers.
-            docker-compose down
-            # Pull prebuilt images from your registry.
-            docker-compose pull
-            # Start the containers in detached mode.
-            docker-compose up -d
-            docker-compose ps
+          registry: ghcr.io
+          username: ${{ secrets.GH_USERNAME }}
+          password: ${{ secrets.GH_PASSWORD }}
+
+      # 4. Build and push Frontend image
+      - name: Build and push Frontend image
+        run: |
+          # Build the image and tag it with the current commit SHA
+          docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:${{ github.sha }} -f frontend/Dockerfile frontend
+          # Push the commit-specific tag
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:${{ github.sha }}
+          # Tag the image as "latest"
+          docker tag ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:${{ github.sha }} ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:latest
+          # Push the "latest" tag
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:latest
+
+      # 5. Build and push Backend image
+      - name: Build and push Backend image
+        run: |
+          docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:${{ github.sha }} -f backend/Dockerfile backend
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:${{ github.sha }}
+          docker tag ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:${{ github.sha }} ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:latest
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:latest
