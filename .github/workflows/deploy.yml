@@ -1,59 +1,42 @@
 name: Deploy to Oracle Cloud
 
 on:
-  workflow_dispatch:  # This makes the deployment manual only
+  workflow_dispatch:  # Manual trigger
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Check out the code from GitHub.
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # 1. Check out the code from GitHub.
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    # 2. Set up Node.js environment.
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      # 2. (Optional) Build Docker images locally
+      # This step runs on the CI runner; it ensures your Dockerfiles are valid.
+      - name: Build Docker images locally
+        run: docker-compose build
 
-    # 3. Build the Frontend (Next.js) application.
-    - name: Install and Build Frontend
-      working-directory: ./frontend
-      run: |
-        npm install
-        npm run build
-
-    # 4. Install backend dependencies (if using Node/Fastify).
-    - name: Install Backend Dependencies
-      working-directory: ./backend
-      run: npm install
-
-    # 5. Deploy to Oracle Cloud Server via SSH.
-    - name: Deploy to Oracle Cloud Server
-      uses: appleboy/ssh-action@v0.1.8
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SERVER_SSH_KEY }}
-        port: ${{ secrets.SERVER_PORT }}
-        script: |
-          # Change to the deployment directory
-          cd /var/www/justrooms-website
-          # Pull latest changes from the main branch.
-          git pull origin main
-
-          # --- FRONTEND DEPLOYMENT ---
-          cd frontend
-          npm install --production
-          npm run build
-          # Restart frontend via PM2. Adjust the command as needed.
-          pm2 start npm --name "frontend" -- run start --prefix /var/www/justrooms-website/frontend
-
-          
-          # --- BACKEND DEPLOYMENT ---
-          cd ../backend
-          npm install --production
-          # Restart backend via PM2. Adjust 'server.js' if your entry file is named differently.
-          pm2 restart backend || pm2 start node --name "backend" server.js --cwd "$(pwd)"
+      # 3. Deploy to Oracle Cloud Server via SSH.
+      - name: Deploy to Oracle Cloud Server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            # Change to the deployment directory.
+            cd /var/www/justrooms-website
+            
+            # Pull the latest changes from GitHub.
+            git pull origin main
+            
+            # Stop and remove the old containers.
+            docker-compose down
+            
+            # Rebuild and start containers in detached mode.
+            docker-compose up -d --build
+            
+            # (Optional) List running containers to verify deployment.
+            docker-compose ps
