@@ -1,23 +1,24 @@
-name: Deploy to Oracle Cloud
+name: Deploy to Production
 
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Check out the code from GitHub.
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. (Optional) Build Docker images locally
-      # This step runs on the CI runner; it ensures your Dockerfiles are valid.
+      - name: Install Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
       - name: Build Docker images locally
         run: docker-compose build
 
-      # 3. Deploy to Oracle Cloud Server via SSH.
       - name: Deploy to Oracle Cloud Server
         uses: appleboy/ssh-action@v0.1.8
         with:
@@ -26,17 +27,8 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            # Change to the deployment directory.
             cd /var/www/justrooms-website
-            
-            # Pull the latest changes from GitHub.
             git pull origin main
-            
-            # Stop and remove the old containers.
             docker-compose down
-            
-            # Rebuild and start containers in detached mode.
             docker-compose up -d --build
-            
-            # (Optional) List running containers to verify deployment.
             docker-compose ps
