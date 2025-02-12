@@ -31,18 +31,18 @@ jobs:
       - name: Build and push Frontend image
         run: |
           # Build the image and tag it with the current commit SHA
-          docker build -t ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-frontend:${{ github.sha }} -f frontend/Dockerfile frontend
+          docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:${{ github.sha }} -f frontend/Dockerfile frontend
           # Push the commit-specific tag
-          docker push ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-frontend:${{ github.sha }}
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:${{ github.sha }}
           # Tag the image as "latest"
-          docker tag ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-frontend:${{ github.sha }} ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-frontend:latest
+          docker tag ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:${{ github.sha }} ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:latest
           # Push the "latest" tag
-          docker push ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-frontend:latest
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-frontend:latest
 
       # 5. Build and push Backend image
       - name: Build and push Backend image
         run: |
-          docker build -t ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-backend:${{ github.sha }} -f backend/Dockerfile backend
-          docker push ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-backend:${{ github.sha }}
-          docker tag ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-backend:${{ github.sha }} ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-backend:latest
-          docker push ghcr.io/${{ secrets.GITHUB_USERNAME }}/justrooms-backend:latest
+          docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:${{ github.sha }} -f backend/Dockerfile backend
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:${{ github.sha }}
+          docker tag ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:${{ github.sha }} ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:latest
+          docker push ghcr.io/${{ secrets.GH_USERNAME }}/justrooms-backend:latest
