@@ -8,6 +8,8 @@ services:
       - "3000:3000"
     networks:
       - appnet
+    # Override default entrypoint
+    entrypoint: []
 
   backend:
     image: ghcr.io/justrooms/justrooms-backend:latest
@@ -16,6 +18,8 @@ services:
       - "8080:8080"
     networks:
       - appnet
+    # Override default entrypoint
+    entrypoint: []
 
   nginx-proxy-manager:
     image: 'jc21/nginx-proxy-manager:latest'
