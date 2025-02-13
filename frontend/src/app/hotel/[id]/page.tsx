@@ -1,8 +1,8 @@
 // app/hotel/[id]/page.tsx
 'use client';
 
-import { useSearchParams, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+//import { useSearchParams, useParams } from 'next/navigation';
+//import { useEffect, useState } from 'react';
 
 export default function HotelDetailsPage() {
 
