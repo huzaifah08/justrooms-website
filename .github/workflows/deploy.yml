@@ -23,7 +23,7 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd /var/www/justrooms-website
-            git pull origin main
             docker compose down
-            docker compose up -d --build
+            docker compose pull
+            docker compose up -d
             docker compose ps
