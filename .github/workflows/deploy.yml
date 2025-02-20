@@ -32,4 +32,13 @@ jobs:
             docker compose down
             docker compose pull
             docker compose up -d
+            for container in nextjs_frontend fastify_backend nginx_proxy_manager; do
+              status=$(sudo docker inspect --format='{{.State.Running}}' $container 2>/dev/null)
+              if [ "$status" != "true" ]; then
+                echo "Error: Container $container is not running!"
+                exit 1
+              else
+                echo "Container $container is running."
+              fi
+            done
             docker compose ps
