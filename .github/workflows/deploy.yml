@@ -22,7 +22,13 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            cd /var/www/justrooms-website
+            # Ensure the target directory exists
+            cd /var/www
+            mkdir -p justrooms-website
+            cd justrooms-website
+            # Pull the latest code (if you are using git on the server)
+            git pull origin main
+            # Stop current containers, pull prebuilt images, and start new containers
             docker compose down
             docker compose pull
             docker compose up -d
