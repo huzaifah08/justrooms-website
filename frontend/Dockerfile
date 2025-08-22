@@ -1,24 +1,23 @@
-# Use an official Node.js runtime based on Alpine for a small image
+# Use a lightweight Node.js image
 FROM node:20-alpine
 
-# Set the working directory inside the container
+# Create app directory
 WORKDIR /app
 
-# Copy package files first (this improves caching if dependencies haven’t changed)
-COPY package*.json ./
+# Copy package files first (better caching for Docker layers)
+COPY package*.json tsconfig.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies (no dev deps in production image)
+RUN npm install --only=production
 
-# Copy the rest of the source code
+# Copy source code
 COPY . .
 
-# Build the Next.js app for production
-RUN npm run build
+# Build TypeScript into dist/
+RUN npx tsc
 
-# Expose the port the app runs on (adjust if your Next.js app uses a different port)
-EXPOSE 3000
+# Expose Fastify port
+EXPOSE 8080
 
-
-# Use the production start command
-CMD ["npm", "start"]
+# Run the compiled server
+CMD ["node", "dist/backend/server.js"]

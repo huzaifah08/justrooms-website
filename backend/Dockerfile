@@ -4,7 +4,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 # Copy package files first
-COPY package*.json ./
+COPY package*.json tsconfig.json ./
 
 # Install dependencies
 RUN npm install
@@ -12,10 +12,11 @@ RUN npm install
 # Copy the rest of your backend code
 COPY . .
 
-# Expose port 8080 (assuming your Fastify app listens on port 8080)
+# Compile TypeScript to JavaScript (dist/)
+RUN npx tsc
+
+# Expose port 8080 (assuming Fastify listens on 8080)
 EXPOSE 8080
 
-
-# Start the Fastify app (ensure your package.json "start" script does this)
-CMD ["npm", "start"]
-
+# Run the compiled JS
+CMD ["node", "dist/server.js"]

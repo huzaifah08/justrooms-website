@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,5 +17,12 @@
     "dotenv": "^16.4.7",
     "fastify": "^5.2.1",
     "pg": "^8.13.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/node-fetch": "^2.6.13",
+    "@types/pg": "^8.15.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
